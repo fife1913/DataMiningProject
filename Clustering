@@ -1,0 +1,25 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from scipy.spatial.distance import cdist
+
+dataIn = pd.read_csv('https://query.data.world/s/5urzg32xd7lgdqat3ke5ihu7iizwyk') 
+x1=dataIn['Y'] 
+y1=dataIn['X'] 
+
+data = np.array(list(zip(x1, y1))).reshape(len(x1), 2)
+distortions = []
+clusters = np.array([10,20,30,40,50,60,70,80,90,100]) 
+
+for k in clusters:
+    kmean = KMeans(n_clusters=k).fit(data)
+    kmean.fit(data)
+    distortions.append(sum(np.min(cdist(data, kmean.cluster_centers_, 'euclidean'), axis=1)) / data.shape[0])
+  
+    
+plt.plot(clusters, distortions, 'bx-')
+plt.xlabel('clusters')
+plt.ylabel('distortion')
+plt.title('plot to select the number of clusters')
+plt.show()
